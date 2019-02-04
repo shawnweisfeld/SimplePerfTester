@@ -3,29 +3,32 @@
     Sub Main()
 
         Console.WriteLine("Running Test")
+        Dim run = New Long
 
-        Dim iterations As Integer = 1000
-
-        For i As Integer = 1 To iterations
-            GetCpuMipBenchmark()
-        Next
-
-        Console.WriteLine("Done!")
-        Console.ReadKey()
+        While True
+            run = run + 1
+            GetCpuMipBenchmark(run)
+        End While
 
     End Sub
 
-    Public Sub GetCpuMipBenchmark()
+    Public Sub GetCpuMipBenchmark(run As Long)
         Try
             'Compute the Avg MipScore
             Dim mipScore As Double
+            Dim avgScore As Double
+
             Dim iterations As Integer = 50
 
             For i As Integer = 1 To iterations
                 mipScore = mipScore + GetCpuMipScore()
             Next
 
-            Console.WriteLine($"Score: {Math.Round(mipScore / iterations, 2)}")
+            avgScore = Math.Round(mipScore / iterations, 2)
+
+            Console.WriteLine($"Score: {avgScore}")
+
+            IO.File.AppendAllText("score.csv", $"{DateTime.Now:G},{run},{avgScore}{Environment.NewLine}")
 
         Catch ex As Exception
             Console.WriteLine(ex.ToString)
